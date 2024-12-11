@@ -1,3 +1,7 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # 假设要和train.py对应使用cuda:1
+
 from torch.utils.data import DataLoader
 import torch
 from tqdm import tqdm
@@ -13,16 +17,18 @@ from utils1.metrics import DiceAverage
 from collections import OrderedDict
 from torch import nn
 
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # 假设要和train.py对应使用cuda:1
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+#此时test_data_path='./fixed1_data'
+
+device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 
 
 def predict_one_img(model, img_dataset, args):
     dataloader = DataLoader(dataset=img_dataset, batch_size=1, num_workers=0, shuffle=False)
-    model.eval()
+    model.eval().to(device)
+    print("gpu", args.gpu_id)
+    print("Model device:", next(model.parameters()).device)#打印模型的设备属性
     test_dice = DiceAverage(args.n_labels)
-    target = to_one_hot_3d(img_dataset.label, args.n_labels)
+    target = to_one_hot_3d(img_dataset.label, args.n_labels).to(device)
     print("Target device:", target.device)  # 添加打印语句查看target的设备
 
     with torch.no_grad():
@@ -31,7 +37,7 @@ def predict_one_img(model, img_dataset, args):
             print("Data device:", data.device)  # 添加打印语句查看data的设备
             output = model(data)
             output = nn.functional.interpolate(output, scale_factor=(1//args.slice_down_scale,1//args.xy_down_scale,1//args.xy_down_scale), mode='trilinear', align_corners=False) # 空间分辨率恢复到原始size
-            img_dataset.update_result(output.detach().cpu())
+            img_dataset.update_result(output.detach().to(device))
 
     pred = img_dataset.recompone_result()
     pred = torch.argmax(pred, dim=1)
@@ -53,7 +59,7 @@ def predict_one_img(model, img_dataset, args):
 if __name__ == '__main__':
     args = config.args
     save_path = os.path.join('./experiments', args.save)
-    device = torch.device('cpu' if args.cpu else 'cuda:0')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # model info
     model = UNet3D(in_channels=1, out_channels=args.n_labels).to(device)
     #print(args.gpu_id)
@@ -78,6 +84,6 @@ if __name__ == '__main__':
     print("测试数据路径: ", args.test_data_path)
     datasets = Test_Datasets(args.test_data_path, args=args)
     for img_dataset, file_idx in datasets:
-        test_dice, pred_img = predict_one_img(model, img_dataset, args)
+        test_dice, pred_img = predict_one_img(model, img_dataset, args).to(device)
         test_log.update(file_idx, test_dice)
         sitk.WriteImage(pred_img, os.path.join(result_save_path, 'result-' + file_idx + '.gz'))

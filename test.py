@@ -1,3 +1,7 @@
+import os
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # 假设要和train.py对应使用cuda:1
+
 from torch.utils.data import DataLoader
 import torch
 from tqdm import tqdm
@@ -5,21 +9,20 @@ import config
 from utils import logger,common
 from dataset.dataset_lits_test import Test_Datasets,to_one_hot_3d
 import SimpleITK as sitk
-import os
+
 import numpy as np
 # from models import ResUNet
 from my_UNet import UNet3D
 from utils.metrics import DiceAverage
 from collections import OrderedDict
 
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # 假设要和train.py对应使用cuda:1
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def predict_one_img(model, img_dataset, args):
     dataloader = DataLoader(dataset=img_dataset, batch_size=1, num_workers=0, shuffle=False)
+    model=model.to(device)#2024.12.11 16:22新加
     model.eval()
     test_dice = DiceAverage(args.n_labels)
-    target = to_one_hot_3d(img_dataset.label, args.n_labels)
+    target = to_one_hot_3d(img_dataset.label, args.n_labels).to(device)
     print("Target device:", target.device)  # 添加打印语句查看target的设备
 
     with torch.no_grad():
@@ -49,7 +52,7 @@ def predict_one_img(model, img_dataset, args):
 if __name__ == '__main__':
     args = config.args
     save_path = os.path.join('./experiments', args.save)
-    device = torch.device('cpu' if args.cpu else 'cuda:0')
+    # device = torch.device('cpu' if args.cpu else 'cuda:0')
     # model info
     model = UNet3D(in_channels=1, out_channels=args.n_labels).to(device)
     print(args.gpu_id)

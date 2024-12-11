@@ -42,6 +42,7 @@ class UNet3D(nn.Module):
         )
 
     def forward(self, x):
+        print('网络输入尺寸：', x.shape)
         enc1 = self.encoder1(x)
         enc2 = self.encoder2(self.pool1(enc1))
         enc3 = self.encoder3(self.pool2(enc2))
@@ -62,6 +63,7 @@ class UNet3D(nn.Module):
         dec1 = torch.cat((dec1, enc1), dim=1)
         dec1 = self.decoder1(dec1)
         dec1 = self.conv_final(dec1)
+        print('网络输出尺寸：', dec1.shape)
 
         # if self.training is True:
         #     return dec4, dec3, dec2, dec1
@@ -86,3 +88,15 @@ class UNet3D(nn.Module):
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # net = UNet3D(in_channels=1, out_channels=2).to(device)
 # summary(net, (1, 32, 64, 64))
+
+
+# if __name__ == "__main__":
+#
+#     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#     image_size = 512
+#     x = torch.Tensor(1, 2, 48, image_size, image_size)
+#     x.to(device)
+#     print("x size: {}".format(x.size()))
+#     model = UNet3D(in_channels=1, out_channels=2)
+#     out = model(x)
+#     print("out size: {}".format(out.size()))

@@ -3,9 +3,10 @@ import argparse
 parser = argparse.ArgumentParser(description='Hyper-parameters management')
 
 # Hardware options
-parser.add_argument('--n_threads', type=int, default=6,help='number of threads for data loading')
+#parser.add_argument('--n_threads', type=int, default=6,help='number of threads for data loading')
+parser.add_argument('--n_threads', type=int, default=1,help='number of threads for data loading')
 parser.add_argument('--cpu', action='store_true',help='use cpu only')
-parser.add_argument('--gpu_id', type=list,default=[0,1,2,3], help='use cpu only')
+parser.add_argument('--gpu_id', type=list,default=[2], help='use cpu only')
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
 
 # Preprocess parameters
@@ -15,14 +16,15 @@ parser.add_argument('--lower', type=int, default=-200, help='')
 parser.add_argument('--norm_factor', type=float, default=200.0, help='')
 parser.add_argument('--expand_slice', type=int, default=20, help='')
 parser.add_argument('--min_slices', type=int, default=48, help='')
-parser.add_argument('--xy_down_scale', type=float, default=0.5, help='')
+parser.add_argument('--xy_down_scale', type=float, default=1.0, help='')  # 默认0.5
 parser.add_argument('--slice_down_scale', type=float, default=1.0, help='')
 parser.add_argument('--valid_rate', type=float, default=0.2, help='')
 
 # data in/out and dataset
 parser.add_argument('--dataset_path',default = './fixed_data',help='fixed trainset root path')
 #parser.add_argument('--dataset_path',default = '/ssd/lzq/dataset/fixed_lits',help='fixed trainset root path')
-parser.add_argument('--test_data_path',default = './raw_dataset/test',help='Testset path')
+parser.add_argument('--test_data_path',default = r'D:\PycharmProjects\github\baseline\3DUNet-Pytorch-master\raw_dataset\test',help='Testset path')
+#parser.add_argument('--test_data_path',default = './fixed1_data',help='Testset path')
 #parser.add_argument('--test_data_path',default = '/ssd/lzq/dataset/LiTS/test',help='Testset path')
 parser.add_argument('--save',default='UNet',help='save path of trained model')
 parser.add_argument('--batch_size', type=list, default=1,help='batch size of trainset')

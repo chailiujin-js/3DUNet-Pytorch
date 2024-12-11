@@ -1,4 +1,6 @@
 from torch._C import dtype
+
+import config
 from utils.common import *
 from scipy import ndimage
 import numpy as np
@@ -9,7 +11,7 @@ from glob import glob
 import math
 import SimpleITK as sitk
 
-os.chdir('/home/dcd/gy/3DUnet')
+# os.chdir('/home/dcd/gy/3DUnet')
 #print("当前工作目录:", os.getcwd())
 class Img_DataSet(Dataset):
     def __init__(self, data_path, label_path, args):
@@ -51,6 +53,9 @@ class Img_DataSet(Dataset):
         return len(self.data_np)
 
     def update_result(self, tensor):
+        #以下两行设备代码于2024.12.9添加
+        if tensor.device != torch.device('cuda'):
+            tensor = tensor.to('cuda')
         # tensor = tensor.detach().cpu() # shape: [N,class,s,h,w]
         # tensor_np = np.squeeze(tensor_np,axis=0)
         if self.result is not None:
@@ -61,16 +66,29 @@ class Img_DataSet(Dataset):
     # 原始代码
     def recompone_result(self):
 
+        # 以下四行设备代码于2024.12.9添加
+        if self.result is None:
+            return None  # 若self.result为空，直接返回None，避免后续报错
+        if self.result.device != torch.device('cuda'):
+            self.result = self.result.to('cuda')
+
         patch_s = self.result.shape[2]
 
         N_patches_img = (self.padding_shape[0] - patch_s) // self.cut_stride + 1
         assert (self.result.shape[0] == N_patches_img)
 
         full_prob = torch.zeros((self.n_labels, self.padding_shape[0], self.ori_shape[1],self.ori_shape[2]))  # itialize to zero mega array with sum of Probabilities
-        full_sum = torch.zeros((self.n_labels, self.padding_shape[0], self.ori_shape[1], self.ori_shape[2]))
+        print('full_prob：', full_prob.shape)
 
+        full_sum = torch.zeros((self.n_labels, self.padding_shape[0], self.ori_shape[1], self.ori_shape[2]))
+        print('full_sum：', full_sum.shape)
         for s in range(N_patches_img):
-            full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s] += self.result[s]
+            print('############', self.result[s].shape, full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].shape)
+            if full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].device != self.result[s].device:
+                print("Error: full_prob and self.result[s] are on different devices!")
+                print("full_prob device:", full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].device)
+                print("self.result[s] device:", self.result[s].device)
+            full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s] += self.result[s].to("cuda:0")
             full_sum[:, s * self.cut_stride:s * self.cut_stride + patch_s] += 1
 
         assert (torch.min(full_sum) >= 1.0)  # at least one
@@ -80,81 +98,6 @@ class Img_DataSet(Dataset):
         assert (torch.min(final_avg) >= 0.0)  # min value for a pixel is 0.0
         img = final_avg[:, :self.ori_shape[0], :self.ori_shape[1], :self.ori_shape[2]]
         return img.unsqueeze(0)
-
-    # def recompone_result(self):
-    #     patch_s = self.result.shape[2]
-    #     print("Patch_s value:", patch_s)  # 打印patch_s的值
-    #
-    #     N_patches_img = (self.padding_shape[0] - patch_s) // self.cut_stride + 1
-    #     assert (self.result.shape[0] == N_patches_img)
-    #
-    #     full_prob = torch.zeros((self.n_labels, self.padding_shape[0], self.ori_shape[1],
-    #                              self.ori_shape[2]))  # 初始化全概率张量
-    #     full_sum = torch.zeros((self.n_labels, self.padding_shape[0], self.ori_shape[1], self.ori_shape[2]))
-    #
-    #     print("Full_prob shape: {}".format(full_prob.shape))  # 打印full_prob形状
-    #     print("Full_sum shape: {}".format(full_sum.shape))  # 打印full_sum形状
-    #
-    #     for s in range(N_patches_img):
-    #         print("Adding patch {} to full_prob".format(s))
-    #         print("Patch {} shape: {}".format(s, self.result[s].shape))  # 打印当前要添加的patch形状
-    #         print("self.result[s]的实际维度数量:", len(self.result[s].shape))  # 新增：打印self.result[s]的实际维度数量
-    #         patch_shape = self.result[s].shape
-    #         target_shape = full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].shape
-    #         print("target_shape:", target_shape)  # 新增：打印target_shape信息
-    #
-    #         # 新增：根据实际维度数量来处理维度不一致情况
-    #         if len(patch_shape) == 4:  # 假设实际维度为4维情况，你可根据实际调整
-    #             if patch_shape[2] > target_shape[2]:
-    #                 self.result[s] = self.result[s][:, :, :target_shape[2], :]
-    #             elif patch_shape[2] < target_shape[2]:
-    #                 temp_patch = torch.zeros(
-    #                     (self.result[s].shape[0], self.result[s].shape[1], target_shape[2], self.result[s].shape[3]))
-    #                 temp_patch[:, :, :patch_shape[2], :] = self.result[s]
-    #
-    #                 self.result[s] = temp_patch
-    #             if patch_shape[3] > target_shape[3]:
-    #                 self.result[s] = self.result[s][:, :, :, :target_shape[3]]
-    #             elif patch_shape[3] < target_shape[3]:
-    #                 temp_patch = torch.zeros(
-    #                     (self.result[s].shape[0], self.result[s].shape[1], self.result[s].shape[2], target_shape[3]))
-    #                 temp_patch[:, :, :, :patch_shape[3]] = self.result[s]
-    #                 self.result[s] = temp_patch
-    #         elif len(patch_shape) == 5:  # 假设存在5维情况，同样根据实际调整
-    #             if patch_shape[2] > target_shape[2]:
-    #                 self.result[s] = self.result[s][:, :, :target_shape[2], :, :]
-    #             elif patch_shape[2] < target_shape[2]:
-    #                 temp_patch = torch.zeros((self.result[s].shape[0], self.result[s].shape[1], target_shape[2],
-    #                                           self.result[s].shape[3], self.result[s].shape[4]))
-    #                 temp_patch[:, :, :patch_shape[2], :, :] = self.result[s]
-    #                 self.result[s] = temp_patch
-    #             if patch_shape[3] > target_shape[3]:
-    #                 self.result[s] = self.result[s][:, :, :, :target_shape[3], :]
-    #             elif patch_shape[3] < target_shape[3]:
-    #                 temp_patch = torch.zeros((self.result[s].shape[0], self.result[s].shape[1], self.result[s].shape[2],
-    #                                           target_shape[3], self.result[s].shape[4]))
-    #                 temp_patch[:, :, :, :patch_shape[3], :] = self.result[s]
-    #                 self.result[s] = temp_patch
-    #             if patch_shape[4] > target_shape[4]:
-    #                 self.result[s] = self.result[s][:, :, :, :, :target_shape[4]]
-    #             elif patch_shape[4] < target_shape[4]:
-    #                 temp_patch = torch.zeros((self.result[s].shape[0], self.result[s].shape[1], self.result[s].shape[2],
-    #                                           self.result[s].shape[3], target_shape[4]))
-    #                 temp_patch[:, :, :, :, :patch_shape[4]] = self.result[s]
-    #                 self.result[s] = temp_patch
-    #
-    #         full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s] += self.result[s]
-    #         full_sum[:, s * self.cut_stride:s * self.cut_stride + patch_s] += 1
-    #
-    #     assert (torch.min(full_sum) >= 1.0)  # 至少有一个
-    #     final_avg = full_prob / full_sum
-    #     print("Final_avg shape: {}".format(final_avg.shape))  # 打印final_avg形状
-    #     assert (torch.max(final_avg) <= 1.0)  # 像素最大值为1.0
-    #     assert (torch.min(final_avg) >= 0.0)  # 像素最小值为0.0
-    #     img = final_avg[:, :self.ori_shape[0], :self.ori_shape[1], :self.ori_shape[2]]
-    #     return img.unsqueeze(0)
-
-
 
     def padding_img(self, img, size, stride):
         assert (len(img.shape) == 3)  # 3D array
@@ -227,3 +170,20 @@ def Test_Datasets(dataset_path, args):
 #             print("重组结果形状:", recomposed_result.shape)
 #         except Exception as e:
 #             print("调用recompone_result方法出现错误:", e)
+
+if __name__ == "__main__":
+    args = config.args
+    dataset_path = args.test_data_path  # 替换为实际的数据集路径
+    dataset_generator = Test_Datasets(dataset_path, args)
+    for dataset, file_idx in dataset_generator:
+        result = dataset.recompone_result()
+        if result is not None:
+            print(f"Result shape for file {file_idx}: {result.shape}")
+            # 这里可以根据需要进一步对结果进行处理，比如保存结果等
+            # 例如，如果要保存为Numpy数组，可以使用：
+            # np.save(f"result_{file_idx}.npy", result.squeeze(0).numpy())
+            # 如果要转换为SimpleITK图像对象保存（假设符合相应的图像格式要求等）：
+            # result_sitk = sitk.GetImageFromArray(result.squeeze(0).numpy())
+            # sitk.WriteImage(result_sitk, f"result_{file_idx}.nii.gz")
+        else:
+            print(f"Result is None for file {file_idx}")

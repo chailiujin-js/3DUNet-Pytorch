@@ -1,3 +1,9 @@
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 屏蔽通知和警告信息
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # 使用gpu0
+
+
 from dataset.dataset_lits_val import Val_Dataset
 from dataset.dataset_lits_train import Train_Dataset
 
@@ -12,11 +18,8 @@ from my_UNet import UNet3D
 from utils1 import weights_init, metrics, common, loss
 from collections import OrderedDict
 
-import os
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 屏蔽通知和警告信息
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # 使用gpu0
-device = torch.device('cuda:2' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def val(model, val_loader, loss_func, n_labels):
     model = model.to(device)
@@ -77,7 +80,7 @@ if __name__ == '__main__':
     args = config.args
     save_path = os.path.join('./experiments', args.save)
     if not os.path.exists(save_path): os.mkdir(save_path)
-    device = torch.device('cpu' if args.cpu else 'cuda')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # data info
     train_loader = DataLoader(dataset=Train_Dataset(args),batch_size=args.batch_size,num_workers=args.n_threads, shuffle=True)
     val_loader = DataLoader(dataset=Val_Dataset(args),batch_size=1,num_workers=args.n_threads, shuffle=False)
