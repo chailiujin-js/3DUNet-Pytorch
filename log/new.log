@@ -1,0 +1,124 @@
+nohup: 忽略输入
+Layer: Conv3d(1, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(32, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(64, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(128, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(256, 512, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(512, 512, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: ConvTranspose3d(512, 256, kernel_size=(2, 2, 2), stride=(2, 2, 2)), Bias: Parameter containing:
+tensor([ 0.0215,  0.0167,  0.0084, -0.0139, -0.0140,  0.0120, -0.0204,  0.0144,
+        -0.0023, -0.0123,  0.0028, -0.0121, -0.0069, -0.0082, -0.0147,  0.0074,
+        -0.0166, -0.0108,  0.0079,  0.0075,  0.0114,  0.0089, -0.0160, -0.0072,
+         0.0041, -0.0113,  0.0084, -0.0019,  0.0175, -0.0195, -0.0029,  0.0043,
+         0.0082, -0.0109,  0.0220,  0.0145,  0.0158, -0.0121, -0.0126, -0.0131,
+         0.0144, -0.0182, -0.0103, -0.0193, -0.0036, -0.0082,  0.0112, -0.0027,
+         0.0021, -0.0201, -0.0132, -0.0006,  0.0113, -0.0082, -0.0156,  0.0183,
+         0.0043,  0.0154,  0.0125, -0.0160, -0.0165, -0.0179, -0.0175,  0.0145,
+        -0.0076,  0.0104,  0.0112, -0.0082,  0.0077, -0.0159,  0.0120, -0.0152,
+        -0.0210, -0.0160,  0.0109,  0.0042, -0.0163, -0.0153, -0.0009, -0.0051,
+         0.0024,  0.0133,  0.0200,  0.0100,  0.0008, -0.0129, -0.0154,  0.0026,
+        -0.0011,  0.0199,  0.0046,  0.0038, -0.0120,  0.0103,  0.0039,  0.0057,
+         0.0088, -0.0019,  0.0047,  0.0037, -0.0142,  0.0137, -0.0069,  0.0096,
+         0.0075, -0.0148,  0.0140,  0.0138,  0.0090,  0.0200,  0.0195, -0.0045,
+        -0.0101, -0.0099,  0.0075,  0.0177, -0.0072,  0.0107, -0.0088, -0.0027,
+         0.0138, -0.0150,  0.0045,  0.0072, -0.0144,  0.0186, -0.0183,  0.0176,
+        -0.0031, -0.0160,  0.0125,  0.0117, -0.0014,  0.0144,  0.0205, -0.0105,
+         0.0017,  0.0020,  0.0124, -0.0074,  0.0014,  0.0064,  0.0008,  0.0078,
+        -0.0056,  0.0004, -0.0191,  0.0022, -0.0133,  0.0047,  0.0174,  0.0010,
+         0.0028, -0.0109,  0.0087, -0.0034, -0.0059,  0.0155, -0.0070,  0.0060,
+        -0.0193, -0.0192,  0.0051, -0.0007, -0.0070, -0.0141, -0.0063, -0.0211,
+         0.0149,  0.0110, -0.0182, -0.0041,  0.0014,  0.0163,  0.0034, -0.0215,
+         0.0152,  0.0049,  0.0205, -0.0003,  0.0101, -0.0076,  0.0088, -0.0110,
+         0.0159, -0.0103,  0.0157,  0.0139, -0.0075,  0.0126, -0.0017, -0.0086,
+        -0.0156,  0.0034, -0.0061, -0.0046, -0.0023, -0.0078,  0.0021, -0.0129,
+         0.0047, -0.0221,  0.0039,  0.0011, -0.0011, -0.0148, -0.0173, -0.0160,
+        -0.0081,  0.0088,  0.0172,  0.0159,  0.0079,  0.0139, -0.0079,  0.0019,
+         0.0128, -0.0093,  0.0163,  0.0021,  0.0014, -0.0116, -0.0028, -0.0120,
+         0.0014,  0.0174, -0.0051,  0.0155,  0.0192, -0.0079, -0.0077, -0.0065,
+        -0.0011, -0.0187,  0.0019,  0.0117, -0.0162, -0.0086,  0.0003,  0.0202,
+        -0.0078,  0.0165,  0.0179, -0.0147,  0.0032,  0.0218,  0.0208,  0.0111,
+         0.0149,  0.0026, -0.0066,  0.0120, -0.0123,  0.0110, -0.0216,  0.0018],
+       device='cuda:0', requires_grad=True)
+Layer: Conv3d(512, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: ConvTranspose3d(256, 128, kernel_size=(2, 2, 2), stride=(2, 2, 2)), Bias: Parameter containing:
+tensor([-8.9359e-03,  2.1957e-02,  2.3915e-02,  2.2324e-03,  9.5228e-03,
+         1.0883e-03, -1.2398e-03, -2.9955e-02, -2.3099e-03,  2.1553e-02,
+         4.8225e-03,  1.6149e-02,  2.7584e-02,  1.0930e-02,  1.9230e-02,
+        -4.6571e-03,  9.9423e-03, -2.2534e-02, -2.3744e-02, -5.7035e-03,
+         6.9664e-03, -2.2857e-02, -2.9769e-02, -1.0472e-02,  2.1732e-03,
+        -3.0164e-02,  3.0755e-03, -2.4154e-02, -1.2711e-02, -1.0766e-02,
+         9.3680e-04, -4.1150e-03, -6.1468e-03, -2.6443e-02,  2.0706e-02,
+         6.3383e-04,  1.4326e-02, -6.9887e-03,  2.3367e-02,  4.2434e-03,
+        -1.6826e-02, -2.6742e-02,  9.1013e-03,  7.5399e-03,  2.3729e-02,
+        -1.7641e-02, -2.9826e-02, -3.6314e-03,  2.1091e-02,  1.5947e-02,
+        -1.1950e-02,  1.6041e-02, -2.9243e-02, -2.1433e-02,  1.3888e-02,
+        -2.8421e-02, -2.9512e-02, -3.0776e-02, -1.6656e-02, -1.6684e-02,
+        -2.3750e-02,  1.9708e-02, -2.9676e-02, -1.6056e-02,  9.1317e-03,
+        -3.0166e-03,  2.9471e-02,  1.2361e-02,  1.6558e-03, -1.4619e-02,
+         9.6423e-03,  2.1292e-02, -2.4105e-02, -1.7512e-02, -1.4867e-02,
+        -2.1497e-03, -2.3718e-02, -3.1047e-02, -2.3114e-02, -1.7385e-02,
+        -1.8356e-02,  1.7227e-02,  2.5312e-02,  2.4200e-02,  1.5084e-05,
+         2.2482e-02,  2.5097e-02, -2.4875e-02, -1.9914e-03,  2.8825e-02,
+        -5.9813e-03,  2.0050e-02, -1.8085e-02, -2.7044e-02, -4.1956e-03,
+         1.5619e-02,  3.0810e-02,  3.0299e-02, -8.0968e-03,  1.6336e-02,
+         7.3172e-03, -1.2752e-02, -5.2767e-03, -2.1430e-03, -2.5908e-02,
+         1.5875e-02, -2.2521e-02, -1.3281e-02, -1.9201e-02, -2.2743e-02,
+        -2.9494e-02,  9.0180e-03, -1.8849e-02, -1.5767e-02, -8.2977e-03,
+         2.6172e-02, -7.4558e-03, -2.1969e-03,  1.3421e-02, -3.4891e-03,
+        -3.0146e-02,  2.0342e-02, -2.0458e-02,  2.3017e-02,  2.4170e-02,
+        -1.7540e-02, -2.7162e-02, -2.0211e-03], device='cuda:0',
+       requires_grad=True)
+Layer: Conv3d(256, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: ConvTranspose3d(128, 64, kernel_size=(2, 2, 2), stride=(2, 2, 2)), Bias: Parameter containing:
+tensor([-0.0422, -0.0074, -0.0217, -0.0055,  0.0034, -0.0011, -0.0420,  0.0320,
+        -0.0427,  0.0352,  0.0343, -0.0045, -0.0148,  0.0202, -0.0066,  0.0196,
+         0.0151,  0.0075,  0.0098,  0.0344, -0.0335,  0.0298, -0.0109, -0.0016,
+        -0.0087,  0.0082,  0.0134, -0.0209, -0.0007, -0.0204, -0.0390,  0.0084,
+         0.0168, -0.0429,  0.0110, -0.0017, -0.0113, -0.0285,  0.0441,  0.0252,
+         0.0039, -0.0146, -0.0032, -0.0053,  0.0339,  0.0291, -0.0257, -0.0074,
+         0.0188, -0.0247,  0.0427,  0.0340, -0.0267,  0.0225, -0.0060, -0.0246,
+         0.0175, -0.0125,  0.0182,  0.0005,  0.0307, -0.0133,  0.0404, -0.0337],
+       device='cuda:0', requires_grad=True)
+Layer: Conv3d(128, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: ConvTranspose3d(64, 32, kernel_size=(2, 2, 2), stride=(2, 2, 2)), Bias: Parameter containing:
+tensor([ 0.0072,  0.0562,  0.0451, -0.0556,  0.0352,  0.0026, -0.0477,  0.0356,
+         0.0406,  0.0429,  0.0456,  0.0170,  0.0330, -0.0470, -0.0585,  0.0228,
+         0.0183,  0.0596, -0.0032,  0.0427, -0.0116, -0.0086,  0.0588, -0.0207,
+         0.0059,  0.0312,  0.0351,  0.0596,  0.0030, -0.0131, -0.0586,  0.0239],
+       device='cuda:0', requires_grad=True)
+Layer: Conv3d(64, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False), Bias: None
+Layer: Conv3d(32, 2, kernel_size=(1, 1, 1), stride=(1, 1, 1)), Bias: Parameter containing:
+tensor([-0.1587,  0.0976], device='cuda:0', requires_grad=True)
+训练轮数（args.epochs）的值为： 1
+=======Epoch:1=======lr:0.0001
+
+  0%|          | 0/8 [00:00<?, ?it/s]网络输入尺寸： torch.Size([1, 1, 48, 512, 512])
+  0%|          | 0/8 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 109, in <module>
+    train_log = train(model, train_loader, optimizer, loss, args.n_labels, alpha)
+  File "train.py", line 57, in train
+    output = model(data)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/dcd/gy/3DUnet/my_UNet.py", line 46, in forward
+    enc1 = self.encoder1(x)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/container.py", line 141, in forward
+    input = module(input)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 590, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/dcd/anaconda3/envs/dcd/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 585, in _conv_forward
+    return F.conv3d(
+RuntimeError: CUDA out of memory. Tried to allocate 1.50 GiB (GPU 0; 39.38 GiB total capacity; 3.23 GiB already allocated; 169.19 MiB free; 3.24 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
