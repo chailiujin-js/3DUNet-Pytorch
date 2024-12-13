@@ -1,5 +1,4 @@
 #ignore some files
-.vscode
 .idea
 /__pycache__/
 */__pycache__/
@@ -7,7 +6,7 @@
 /Lab/
 /experiments/*/
 /fixed_data/
-/.vscode/
 fixed1_data
 **/*.pth
 raw_dataset
+**/tmp
