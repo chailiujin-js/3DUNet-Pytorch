@@ -81,22 +81,3 @@ class UNet3D(nn.Module):
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True),
         )
-
-
-# from torchsummary import summary
-#
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# net = UNet3D(in_channels=1, out_channels=2).to(device)
-# summary(net, (1, 32, 64, 64))
-
-
-# if __name__ == "__main__":
-#
-#     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#     image_size = 512
-#     x = torch.Tensor(1, 2, 48, image_size, image_size)
-#     x.to(device)
-#     print("x size: {}".format(x.size()))
-#     model = UNet3D(in_channels=1, out_channels=2)
-#     out = model(x)
-#     print("out size: {}".format(out.size()))

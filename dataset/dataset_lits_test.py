@@ -83,11 +83,7 @@ class Img_DataSet(Dataset):
         print('full_sum：', full_sum.shape)
         for s in range(N_patches_img):
             print('############', self.result[s].shape, full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].shape)
-            if full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].device != self.result[s].device:
-                print("Error: full_prob and self.result[s] are on different devices!")
-                print("full_prob device:", full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s].device)
-                print("self.result[s] device:", self.result[s].device)
-            full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s] += self.result[s].to("cuda:0")
+            full_prob[:, s * self.cut_stride:s * self.cut_stride + patch_s] += self.result[s].to("cpu")
             full_sum[:, s * self.cut_stride:s * self.cut_stride + patch_s] += 1
 
         assert (torch.min(full_sum) >= 1.0)  # at least one
